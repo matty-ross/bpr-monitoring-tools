@@ -4,12 +4,14 @@
 #include "Analyzer.h"
 
 
-static constexpr std::array<int32_t, 24> k_ExcludedGameActionIds =
+static constexpr std::array<int32_t, 29> k_ExcludedGameActionIds =
 {
-    16,
+    15, // completed stunt
+    16, // in progress stunt
     93,
     122, // traffic checking chain
     123, // trigger
+    124, // killzone
     144,
     159,
     168,
@@ -21,11 +23,14 @@ static constexpr std::array<int32_t, 24> k_ExcludedGameActionIds =
     205, // oncoming
     206, // tailgating
     208,
+    209, // event state response
+    210,
     218,
     225,
     227,
     235,
     253,
+    298,
     301,
     304,
     348,
