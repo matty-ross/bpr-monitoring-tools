@@ -1,9 +1,10 @@
 #pragma once
 
 
+#include "lib/common/src/DetourHook.h"
+
 #include "WinsockManager.h"
 #include "DummyServer.h"
-#include "DetourHook.h"
 
 
 class NetworkTraffic
