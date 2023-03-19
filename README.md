@@ -20,8 +20,9 @@ A library with components which are commonly used in multiple tools.
 
 # Tools
 ## Network Traffic
-A tool that creates a dummy local server and simulates the network traffic between the game and the game server without the encryption.
-- Default port: 16976
+A tool that creates a dummy local server and simulates the network traffic between the game and the game server without the TLS encryption.
+- Default port: 16976 (ASCII BP)
 ## Game Actions
 A tool that monitors the game actions and prints their contents into the console.
 - Assumes that the console has already been allocated
+- List of excluded actions can be found [here](https://github.com/matty-ross/bpr-monitoring-tools/blob/main/tools/game-actions/src/Analyzer.cpp#L7)
