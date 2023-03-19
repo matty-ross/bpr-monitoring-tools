@@ -1,8 +1,9 @@
 #pragma once
 
 
+#include "lib/common/src/DetourHook.h"
+
 #include "Analyzer.h"
-#include "DetourHook.h"
 
 
 class GameActions
