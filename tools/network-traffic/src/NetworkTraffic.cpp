@@ -14,7 +14,6 @@ static __declspec(naked) void OnSendThunk()
 
         popad
         popfd
-
         ret
     }
 }
@@ -32,7 +31,6 @@ static __declspec(naked) void OnRecvThunk()
 
         popad
         popfd
-
         ret
     }
 }
@@ -40,20 +38,20 @@ static __declspec(naked) void OnRecvThunk()
 
 NetworkTraffic::NetworkTraffic()
     :
-    m_DummyServer("127.0.0.1", 0x4250), // ascii 'BP'
+    m_DummyServer("127.0.0.1", 0x4250),
     m_SendHook(reinterpret_cast<void*>(0x03A0CB87), 6, OnSendThunk),
     m_RecvHook(reinterpret_cast<void*>(0x03A0D0B1), 5, OnRecvThunk)
 {
     s_Instance = this;
 
-    m_SendHook.Hook();
-    m_RecvHook.Hook();
+    m_SendHook.Attach();
+    m_RecvHook.Attach();
 }
 
 NetworkTraffic::~NetworkTraffic()
 {
-    m_SendHook.Unhook();
-    m_RecvHook.Unhook();
+    m_SendHook.Detach();
+    m_RecvHook.Detach();
 }
 
 void __stdcall NetworkTraffic::OnSend(const uint8_t* const data, const size_t dataSize)

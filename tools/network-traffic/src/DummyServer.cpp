@@ -1,8 +1,8 @@
+#include "DummyServer.h"
+
 #include <array>
 
 #include <Windows.h>
-
-#include "DummyServer.h"
 
 
 DummyServer::DummyServer(const char* const host, const uint16_t port)
@@ -16,8 +16,8 @@ DummyServer::DummyServer(const char* const host, const uint16_t port)
     const SOCKET client = m_ServerSocket.Accept();
     m_ConnectedClientSocket.SetSocket(client);
 
-    m_SendThread = std::thread(&DummyServer::SendThreadFn, this);
-    m_RecvThread = std::thread(&DummyServer::RecvThreadFn, this);
+    m_SendThread = CreateThread(nullptr, 0, &DummyServer::SendThreadProc, this, 0, nullptr);
+    m_RecvThread = CreateThread(nullptr, 0, &DummyServer::RecvThreadProc, this, 0, nullptr);
 }
 
 DummyServer::~DummyServer()
@@ -25,8 +25,11 @@ DummyServer::~DummyServer()
     m_Running = false;
     m_ClientSocket.Shutdown();
 
-    m_SendThread.join();
-    m_RecvThread.join();
+    const HANDLE threads[] = { m_SendThread, m_RecvThread };
+    WaitForMultipleObjects(std::size(threads), threads, TRUE, INFINITE);
+
+    CloseHandle(m_RecvThread);
+    CloseHandle(m_SendThread);
 }
 
 void DummyServer::OnSend(const uint8_t* const data, const size_t dataSize)
@@ -43,23 +46,31 @@ void DummyServer::OnRecv(const uint8_t* const data, const size_t dataSize)
     m_ClientSocket.Recv(buffer.data(), buffer.size());
 }
 
-void DummyServer::SendThreadFn()
+DWORD CALLBACK DummyServer::SendThreadProc(const LPVOID lpParameter)
 {
-    while (m_Running)
+    DummyServer& ds = *static_cast<DummyServer*>(lpParameter);
+    
+    while (ds.m_Running)
     {
-        if (m_NewRecvData)
+        if (ds.m_NewRecvData)
         {
-            m_NewRecvData = false;
-            m_ConnectedClientSocket.Send(m_RecvData.first, m_RecvData.second);
+            ds.m_NewRecvData = false;
+            ds.m_ConnectedClientSocket.Send(ds.m_RecvData.first, ds.m_RecvData.second);
         }
     }
+    
+    return 0;
 }
 
-void DummyServer::RecvThreadFn()
+DWORD CALLBACK DummyServer::RecvThreadProc(const LPVOID lpParameter)
 {
-    while (m_Running)
+    DummyServer& ds = *static_cast<DummyServer*>(lpParameter);
+    
+    while (ds.m_Running)
     {
         std::array<uint8_t, 1024> buffer = {};
-        m_ConnectedClientSocket.Recv(buffer.data(), buffer.size());
+        ds.m_ConnectedClientSocket.Recv(buffer.data(), buffer.size());
     }
+    
+    return 0;
 }

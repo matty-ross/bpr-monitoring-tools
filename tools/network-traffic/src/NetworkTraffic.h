@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "lib/common/src/DetourHook.h"
+#include "lib/common/include/DetourHook.h"
 
 #include "WinsockManager.h"
 #include "DummyServer.h"
@@ -18,6 +18,8 @@ public:
 
 private:
     inline static NetworkTraffic* s_Instance = nullptr;
+
+private:
     WinsockManager m_WinsockManager;
     DummyServer m_DummyServer;
     DetourHook m_SendHook;

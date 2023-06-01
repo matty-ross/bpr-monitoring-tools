@@ -16,16 +16,16 @@ BOOL WINAPI DllMain(
     {
     case DLL_PROCESS_ATTACH:
         {
-            ::DisableThreadLibraryCalls(hinstDLL);
+            DisableThreadLibraryCalls(hinstDLL);
             s_NetworkTraffic = new NetworkTraffic;
-            break;
         }
+        break;
     
     case DLL_PROCESS_DETACH:
         {
             delete s_NetworkTraffic;
-            break;
         }
+        break;
     }
 
     return TRUE;

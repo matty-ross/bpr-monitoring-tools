@@ -1,7 +1,9 @@
 #pragma once
 
 
-#include <thread>
+#include <utility>
+
+#include <Windows.h>
 
 #include "Socket.h"
 
@@ -16,16 +18,19 @@ public:
     void OnRecv(const uint8_t* const data, const size_t dataSize);
 
 private:
-    void SendThreadFn();
-    void RecvThreadFn();
+    static DWORD CALLBACK SendThreadProc(const LPVOID lpParameter);
+    static DWORD CALLBACK RecvThreadProc(const LPVOID lpParameter);
 
 private:
     ClientSocket m_ClientSocket;
     ClientSocket m_ConnectedClientSocket;
     ServerSocket m_ServerSocket;
-    std::thread m_SendThread;
-    std::thread m_RecvThread;
+    
+    HANDLE m_SendThread = nullptr;
+    HANDLE m_RecvThread = nullptr;
+    
     std::pair<const uint8_t*, size_t> m_RecvData;
-    volatile bool m_NewRecvData = false;
-    volatile bool m_Running = true;
+    bool m_NewRecvData = false;
+    
+    bool m_Running = true;
 };
