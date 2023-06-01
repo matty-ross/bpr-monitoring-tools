@@ -21,15 +21,9 @@
     <ClCompile Include="src\GameActions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Analyzer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameActions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Analyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

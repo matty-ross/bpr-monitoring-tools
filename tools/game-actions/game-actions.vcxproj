@@ -155,7 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Analyzer.cpp" />
     <ClCompile Include="src\GameActions.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
@@ -165,7 +164,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Analyzer.h" />
     <ClInclude Include="src\GameActions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
