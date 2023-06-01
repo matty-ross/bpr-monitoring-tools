@@ -16,16 +16,16 @@ BOOL WINAPI DllMain(
     {
     case DLL_PROCESS_ATTACH:
         {
-            ::DisableThreadLibraryCalls(hinstDLL);
+            DisableThreadLibraryCalls(hinstDLL);
             s_GameActions = new GameActions;
-            break;
         }
+        break;
 
     case DLL_PROCESS_DETACH:
         {
             delete s_GameActions;
-            break;
         }
+        break;
     }
 
     return TRUE;
