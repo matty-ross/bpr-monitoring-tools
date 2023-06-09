@@ -39,7 +39,7 @@ static constexpr int32_t k_ExcludedGameActionIds[] =
 };
 
 
-static __declspec(naked) void OnCheckGameActionThunk()
+__declspec(naked) static void OnCheckGameActionThunk()
 {
     __asm
     {
@@ -70,7 +70,7 @@ GameActions::~GameActions()
     m_CheckGameActionsHook.Detach();
 }
 
-void __stdcall GameActions::OnCheckGameAction(const uint8_t* const action, const int32_t actionId, const uint32_t actionSize)
+void __stdcall GameActions::OnCheckGameAction(const uint8_t* action, int32_t actionId, uint32_t actionSize)
 {
     if (std::binary_search(std::begin(k_ExcludedGameActionIds), std::end(k_ExcludedGameActionIds), actionId))
     {

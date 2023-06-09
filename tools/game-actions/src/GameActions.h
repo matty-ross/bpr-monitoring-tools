@@ -11,7 +11,7 @@ public:
     ~GameActions();
 
 public:
-    static void __stdcall OnCheckGameAction(const uint8_t* const action, const int32_t actionId, const uint32_t actionSize);
+    static void __stdcall OnCheckGameAction(const uint8_t* action, int32_t actionId, uint32_t actionSize);
 
 private:
     DetourHook m_CheckGameActionsHook;
