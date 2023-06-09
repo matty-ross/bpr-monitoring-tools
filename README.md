@@ -9,7 +9,7 @@ A collection of tools for monitoring various stuff in Burnout Paradise Remastere
 
 # Building
 1. Open the solution in Visual Studio
-2. Compile for **x86** platform as a **dll** file
+2. Compile for **x86** platform
 3. Inject the dll(s) into the game
 
 
