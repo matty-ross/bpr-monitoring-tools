@@ -7,14 +7,14 @@
 class DetourHook
 {
 public:
-    DetourHook(void* const hookAddress, const size_t hookSize, const void* const detourFunction);
+    DetourHook(void* hookAddress, size_t hookSize, const void* detourFunction);
     ~DetourHook();
 
     void Attach() const;
     void Detach() const;
 
 private:
-    void BuildDetourThunk(const void* const detourFunction);
+    void BuildDetourThunk(const void* detourFunction);
 
 private:
     uint8_t* m_HookAddress = nullptr;

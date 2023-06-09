@@ -3,18 +3,18 @@
 #include <Windows.h>
 
 
-static int32_t GetDisplacement(const void* const nextInstruction, const void* const destination)
+static int32_t GetDisplacement(const void* nextInstruction, const void* destination)
 {
     return static_cast<const uint8_t*>(destination) - static_cast<const uint8_t*>(nextInstruction);
 }
 
 
-DetourHook::DetourHook(void* const hookAddress, const size_t hookSize, const void* const detourFunction)
+DetourHook::DetourHook(void* hookAddress, size_t hookSize, const void* detourFunction)
     :
     m_HookAddress(static_cast<uint8_t*>(hookAddress)),
     m_HookSize(hookSize)
 {
-    m_OriginalCode = new uint8_t[hookSize];
+    m_OriginalCode = new uint8_t[m_HookSize];
     memcpy_s(m_OriginalCode, m_HookSize, m_HookAddress, m_HookSize);
     BuildDetourThunk(detourFunction);
 }
@@ -47,9 +47,9 @@ void DetourHook::Detach() const
     VirtualProtect(m_HookAddress, m_HookSize, oldProtection, &oldProtection);
 }
 
-void DetourHook::BuildDetourThunk(const void* const detourFunction)
+void DetourHook::BuildDetourThunk(const void* detourFunction)
 {
-    const size_t detourThunkSize = 5 + m_HookSize + 5;
+    size_t detourThunkSize = 5 + m_HookSize + 5;
     
     m_DetourThunk = static_cast<uint8_t*>(VirtualAlloc(nullptr, detourThunkSize, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE));
     if (m_DetourThunk == nullptr)
