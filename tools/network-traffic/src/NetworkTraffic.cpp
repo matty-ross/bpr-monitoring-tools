@@ -1,7 +1,7 @@
 #include "NetworkTraffic.h"
 
 
-static __declspec(naked) void OnSendThunk()
+__declspec(naked) static void OnSendThunk()
 {
     __asm
     {
@@ -18,7 +18,7 @@ static __declspec(naked) void OnSendThunk()
     }
 }
 
-static __declspec(naked) void OnRecvThunk()
+__declspec(naked) static void OnRecvThunk()
 {
     __asm
     {
@@ -38,7 +38,7 @@ static __declspec(naked) void OnRecvThunk()
 
 NetworkTraffic::NetworkTraffic()
     :
-    m_DummyServer("127.0.0.1", 0x4250),
+    m_DummyServer("127.0.0.1", 16976),
     m_SendHook(reinterpret_cast<void*>(0x03A0CB87), 6, OnSendThunk),
     m_RecvHook(reinterpret_cast<void*>(0x03A0D0B1), 5, OnRecvThunk)
 {
@@ -54,12 +54,12 @@ NetworkTraffic::~NetworkTraffic()
     m_RecvHook.Detach();
 }
 
-void __stdcall NetworkTraffic::OnSend(const uint8_t* const data, const size_t dataSize)
+void __stdcall NetworkTraffic::OnSend(const uint8_t* data, size_t dataSize)
 {
     s_Instance->m_DummyServer.OnSend(data, dataSize);
 }
 
-void __stdcall NetworkTraffic::OnRecv(const uint8_t* const data, const size_t dataSize)
+void __stdcall NetworkTraffic::OnRecv(const uint8_t* data, size_t dataSize)
 {
     s_Instance->m_DummyServer.OnRecv(data, dataSize);
 }

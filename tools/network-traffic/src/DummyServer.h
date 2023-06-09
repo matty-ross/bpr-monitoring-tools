@@ -1,8 +1,6 @@
 #pragma once
 
 
-#include <utility>
-
 #include <Windows.h>
 
 #include "Socket.h"
@@ -11,15 +9,15 @@
 class DummyServer
 {
 public:
-    DummyServer(const char* const host, const uint16_t port);
+    DummyServer(const char* host, uint16_t port);
     ~DummyServer();
 
-    void OnSend(const uint8_t* const data, const size_t dataSize);
-    void OnRecv(const uint8_t* const data, const size_t dataSize);
+    void OnSend(const uint8_t* data, size_t dataSize);
+    void OnRecv(const uint8_t* data, size_t dataSize);
 
 private:
-    static DWORD CALLBACK SendThreadProc(const LPVOID lpParameter);
-    static DWORD CALLBACK RecvThreadProc(const LPVOID lpParameter);
+    static DWORD CALLBACK SendThreadProc(LPVOID lpParameter);
+    static DWORD CALLBACK RecvThreadProc(LPVOID lpParameter);
 
 private:
     ClientSocket m_ClientSocket;
@@ -29,7 +27,8 @@ private:
     HANDLE m_SendThread = nullptr;
     HANDLE m_RecvThread = nullptr;
     
-    std::pair<const uint8_t*, size_t> m_RecvData;
+    const uint8_t* m_RecvData = nullptr;
+    size_t m_RecvDataSize = 0;
     bool m_NewRecvData = false;
     
     bool m_Running = true;

@@ -11,7 +11,7 @@ class Socket
 {
 public:
     Socket();
-    Socket(const SOCKET socket);
+    Socket(SOCKET socket);
     ~Socket();
 
     Socket(const Socket&) = delete;
@@ -27,11 +27,11 @@ class ClientSocket : public Socket
 public:
     using Socket::Socket;
 
-    void SetSocket(const SOCKET socket);
-    bool Connect(const char* const host, const uint16_t port) const;
+    void SetSocket(SOCKET socket);
+    bool Connect(const char* host, uint16_t port) const;
     bool Shutdown() const;
-    bool Send(const void* const data, const size_t dataSize) const;
-    bool Recv(void* const data, const size_t dataSize) const;
+    bool Send(const void* data, size_t dataSize) const;
+    bool Recv(void* data, size_t dataSize) const;
 };
 
 
@@ -40,7 +40,7 @@ class ServerSocket : public Socket
 public:
     using Socket::Socket;
 
-    bool Bind(const char* const host, const uint16_t port) const;
+    bool Bind(const char* host, uint16_t port) const;
     bool Listen() const;
     SOCKET Accept() const;
 };

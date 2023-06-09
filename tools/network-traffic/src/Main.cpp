@@ -17,7 +17,7 @@ BOOL WINAPI DllMain(
     case DLL_PROCESS_ATTACH:
         {
             DisableThreadLibraryCalls(hinstDLL);
-            s_NetworkTraffic = new NetworkTraffic;
+            s_NetworkTraffic = new NetworkTraffic();
         }
         break;
     

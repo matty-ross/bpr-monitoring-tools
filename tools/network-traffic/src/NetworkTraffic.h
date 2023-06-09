@@ -13,8 +13,9 @@ public:
     NetworkTraffic();
     ~NetworkTraffic();
 
-    static void __stdcall OnSend(const uint8_t* const data, const size_t dataSize);
-    static void __stdcall OnRecv(const uint8_t* const data, const size_t dataSize);
+public:
+    static void __stdcall OnSend(const uint8_t* data, size_t dataSize);
+    static void __stdcall OnRecv(const uint8_t* data, size_t dataSize);
 
 private:
     inline static NetworkTraffic* s_Instance = nullptr;
