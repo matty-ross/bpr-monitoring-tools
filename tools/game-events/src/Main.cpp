@@ -17,7 +17,7 @@ BOOL WINAPI DllMain(
     case DLL_PROCESS_ATTACH:
         {
             DisableThreadLibraryCalls(hinstDLL);
-            s_GameEvents = new GameEvents;
+            s_GameEvents = new GameEvents();
         }
         break;
 

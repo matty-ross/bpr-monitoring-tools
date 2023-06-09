@@ -27,7 +27,7 @@ static constexpr int32_t k_ExcludedGameEventIds[] =
 };
 
 
-static __declspec(naked) void OnProcessGameEventThunk()
+__declspec(naked) static void OnProcessGameEventThunk()
 {
     __asm
     {
@@ -58,7 +58,7 @@ GameEvents::~GameEvents()
     m_ProcessGameEventsHook.Detach();
 }
 
-void __stdcall GameEvents::OnProcessGameEvent(const uint8_t* const event, const int32_t eventId, const uint32_t eventSize)
+void __stdcall GameEvents::OnProcessGameEvent(const uint8_t* event, int32_t eventId, uint32_t eventSize)
 {
     if (std::binary_search(std::begin(k_ExcludedGameEventIds), std::end(k_ExcludedGameEventIds), eventId))
     {

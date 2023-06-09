@@ -11,7 +11,7 @@ public:
     ~GameEvents();
 
 public:
-    static void __stdcall OnProcessGameEvent(const uint8_t* const event, const int32_t eventId, const uint32_t eventSize);
+    static void __stdcall OnProcessGameEvent(const uint8_t* event, int32_t eventId, uint32_t eventSize);
 
 private:
     DetourHook m_ProcessGameEventsHook;
