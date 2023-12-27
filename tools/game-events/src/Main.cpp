@@ -3,7 +3,7 @@
 #include "GameEvents.h"
 
 
-static GameEvents* s_GameEvents = nullptr;
+GameEvents* g_GameEvents = nullptr;
 
 
 BOOL WINAPI DllMain(
@@ -16,14 +16,13 @@ BOOL WINAPI DllMain(
     {
     case DLL_PROCESS_ATTACH:
         {
-            DisableThreadLibraryCalls(hinstDLL);
-            s_GameEvents = new GameEvents();
+            g_GameEvents = new GameEvents();
         }
         break;
 
     case DLL_PROCESS_DETACH:
         {
-            delete s_GameEvents;
+            delete g_GameEvents;
         }
         break;
     }

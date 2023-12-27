@@ -5,7 +5,10 @@
 #include <algorithm>
 
 
-static constexpr int32_t k_ExcludedGameEventIds[] =
+extern GameEvents* g_GameEvents;
+
+
+static constexpr int32_t k_ExcludedGameEventIDs[] =
 {
     53,
     70,
@@ -27,7 +30,34 @@ static constexpr int32_t k_ExcludedGameEventIds[] =
 };
 
 
-__declspec(naked) static void OnProcessGameEventThunk()
+GameEvents::GameEvents()
+    :
+    m_DetourOnProcessGameEvent(reinterpret_cast<void*>(0x00A254DD), 7, DetourOnProcessGameEvent)
+{
+    m_DetourOnProcessGameEvent.Attach();
+}
+
+GameEvents::~GameEvents()
+{
+    m_DetourOnProcessGameEvent.Detach();
+}
+
+void GameEvents::OnGameEvent(const uint8_t* eventData, int32_t eventID, uint32_t eventSize)
+{
+    if (std::binary_search(std::begin(k_ExcludedGameEventIDs), std::end(k_ExcludedGameEventIDs), eventID))
+    {
+        return;
+    }
+
+    printf_s("%4d  [%4X] ", eventID, eventSize);
+    for (uint32_t i = 0; i < eventSize; ++i)
+    {
+        printf_s(" %02X", eventData[i]);
+    }
+    putchar('\n');
+}
+
+__declspec(naked) void GameEvents::DetourOnProcessGameEvent()
 {
     __asm
     {
@@ -37,38 +67,11 @@ __declspec(naked) static void OnProcessGameEventThunk()
         push dword ptr [esi - 0xC]
         push dword ptr [esi - 0x10]
         push esi
-        call GameEvents::OnProcessGameEvent
+        mov ecx, dword ptr [g_GameEvents]
+        call GameEvents::OnGameEvent
 
         popad
         popfd
         ret
     }
-}
-
-
-GameEvents::GameEvents()
-    :
-    m_ProcessGameEventsHook(reinterpret_cast<void*>(0x00A254DD), 7, OnProcessGameEventThunk)
-{
-    m_ProcessGameEventsHook.Attach();
-}
-
-GameEvents::~GameEvents()
-{
-    m_ProcessGameEventsHook.Detach();
-}
-
-void __stdcall GameEvents::OnProcessGameEvent(const uint8_t* event, int32_t eventId, uint32_t eventSize)
-{
-    if (std::binary_search(std::begin(k_ExcludedGameEventIds), std::end(k_ExcludedGameEventIds), eventId))
-    {
-        return;
-    }
-
-    printf_s("%4d  [%4X] ", eventId, eventSize);
-    for (uint32_t i = 0; i < eventSize; ++i)
-    {
-        printf_s(" %02X", event[i]);
-    }
-    putchar('\n');
 }
