@@ -1,7 +1,9 @@
 #pragma once
 
 
-#include "lib/common/include/DetourHook.h"
+#include <cstdint>
+
+#include "core/DetourHook.h"
 
 
 class GameActions
@@ -10,9 +12,12 @@ public:
     GameActions();
     ~GameActions();
 
-public:
-    static void __stdcall OnCheckGameAction(const uint8_t* action, int32_t actionId, uint32_t actionSize);
+private:
+    void OnGameAction(const uint8_t* actionData, int32_t actionID, uint32_t actionSize);
 
 private:
-    DetourHook m_CheckGameActionsHook;
+    static void DetourCheckGameActions();
+
+private:
+    DetourHook m_DetourCheckGameActions;
 };

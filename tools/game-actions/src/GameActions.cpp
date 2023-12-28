@@ -5,7 +5,10 @@
 #include <algorithm>
 
 
-static constexpr int32_t k_ExcludedGameActionIds[] =
+extern GameActions* g_GameActions;
+
+
+static constexpr int32_t k_ExcludedGameActionIDs[] =
 {
     15, // completed stunt
     16, // in progress stunt
@@ -39,7 +42,34 @@ static constexpr int32_t k_ExcludedGameActionIds[] =
 };
 
 
-__declspec(naked) static void OnCheckGameActionThunk()
+GameActions::GameActions()
+    :
+    m_DetourCheckGameActions(reinterpret_cast<void*>(0x07050A59), 7, &GameActions::DetourCheckGameActions)
+{
+    m_DetourCheckGameActions.Attach();
+}
+
+GameActions::~GameActions()
+{
+    m_DetourCheckGameActions.Detach();
+}
+
+void GameActions::OnGameAction(const uint8_t* actionData, int32_t actionID, uint32_t actionSize)
+{
+    if (std::binary_search(std::begin(k_ExcludedGameActionIDs), std::end(k_ExcludedGameActionIDs), actionID))
+    {
+        return;
+    }
+
+    printf_s("%4d  [%4X] ", actionID, actionSize);
+    for (uint32_t i = 0; i < actionSize; ++i)
+    {
+        printf_s(" %02X", actionData[i]);
+    }
+    putchar('\n');
+}
+
+__declspec(naked) void GameActions::DetourCheckGameActions()
 {
     __asm
     {
@@ -49,38 +79,11 @@ __declspec(naked) static void OnCheckGameActionThunk()
         push dword ptr [ecx - 0xC]
         push dword ptr [ecx - 0x10]
         push ecx
-        call GameActions::OnCheckGameAction
+        mov ecx, dword ptr [g_GameActions]
+        call GameActions::OnGameAction
 
         popad
         popfd
         ret
     }
-}
-
-
-GameActions::GameActions()
-    :
-    m_CheckGameActionsHook(reinterpret_cast<void*>(0x07050A59), 7, OnCheckGameActionThunk)
-{
-    m_CheckGameActionsHook.Attach();
-}
-
-GameActions::~GameActions()
-{
-    m_CheckGameActionsHook.Detach();
-}
-
-void __stdcall GameActions::OnCheckGameAction(const uint8_t* action, int32_t actionId, uint32_t actionSize)
-{
-    if (std::binary_search(std::begin(k_ExcludedGameActionIds), std::end(k_ExcludedGameActionIds), actionId))
-    {
-        return;
-    }
-
-    printf_s("%4d  [%4X] ", actionId, actionSize);
-    for (uint32_t i = 0; i < actionSize; ++i)
-    {
-        printf_s(" %02X", action[i]);
-    }
-    putchar('\n');
 }
