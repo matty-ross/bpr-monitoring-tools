@@ -32,14 +32,14 @@ static constexpr int32_t k_ExcludedGameEventIDs[] =
 
 GameEvents::GameEvents()
     :
-    m_DetourOnProcessGameEvent(reinterpret_cast<void*>(0x00A254DD), 7, DetourOnProcessGameEvent)
+    m_DetourProcessGameEvents(reinterpret_cast<void*>(0x00A254DD), 7, &GameEvents::DetourProcessGameEvents)
 {
-    m_DetourOnProcessGameEvent.Attach();
+    m_DetourProcessGameEvents.Attach();
 }
 
 GameEvents::~GameEvents()
 {
-    m_DetourOnProcessGameEvent.Detach();
+    m_DetourProcessGameEvents.Detach();
 }
 
 void GameEvents::OnGameEvent(const uint8_t* eventData, int32_t eventID, uint32_t eventSize)
@@ -57,7 +57,7 @@ void GameEvents::OnGameEvent(const uint8_t* eventData, int32_t eventID, uint32_t
     putchar('\n');
 }
 
-__declspec(naked) void GameEvents::DetourOnProcessGameEvent()
+__declspec(naked) void GameEvents::DetourProcessGameEvents()
 {
     __asm
     {

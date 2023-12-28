@@ -16,8 +16,8 @@ private:
     void OnGameEvent(const uint8_t* eventData, int32_t eventID, uint32_t eventSize);
 
 private:
-    static void DetourOnProcessGameEvent();
+    static void DetourProcessGameEvents();
 
 private:
-    DetourHook m_DetourOnProcessGameEvent;
+    DetourHook m_DetourProcessGameEvents;
 };
