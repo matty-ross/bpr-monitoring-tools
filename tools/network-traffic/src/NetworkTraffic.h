@@ -1,9 +1,8 @@
 #pragma once
 
 
-#include "lib/common/include/DetourHook.h"
+#include "core/DetourHook.h"
 
-#include "WinsockManager.h"
 #include "DummyServer.h"
 
 
@@ -13,16 +12,17 @@ public:
     NetworkTraffic();
     ~NetworkTraffic();
 
-public:
-    static void __stdcall OnSend(const uint8_t* data, size_t dataSize);
-    static void __stdcall OnRecv(const uint8_t* data, size_t dataSize);
+private:
+    void OnSend(const void* data, size_t dataSize);
+    void OnRecv(const void* data, size_t dataSize);
 
 private:
-    inline static NetworkTraffic* s_Instance = nullptr;
+    static void DetourSend();
+    static void DetourRecv();
 
 private:
-    WinsockManager m_WinsockManager;
     DummyServer m_DummyServer;
-    DetourHook m_SendHook;
-    DetourHook m_RecvHook;
+    
+    DetourHook m_DetourSend;
+    DetourHook m_DetourRecv;
 };

@@ -3,7 +3,7 @@
 #include "NetworkTraffic.h"
 
 
-static NetworkTraffic* s_NetworkTraffic = nullptr;
+NetworkTraffic* g_NetworkTraffic = nullptr;
 
 
 BOOL WINAPI DllMain(
@@ -16,14 +16,13 @@ BOOL WINAPI DllMain(
     {
     case DLL_PROCESS_ATTACH:
         {
-            DisableThreadLibraryCalls(hinstDLL);
-            s_NetworkTraffic = new NetworkTraffic();
+            g_NetworkTraffic = new NetworkTraffic();
         }
         break;
     
     case DLL_PROCESS_DETACH:
         {
-            delete s_NetworkTraffic;
+            delete g_NetworkTraffic;
         }
         break;
     }

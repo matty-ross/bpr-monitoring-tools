@@ -1,7 +1,33 @@
 #include "NetworkTraffic.h"
 
 
-__declspec(naked) static void OnSendThunk()
+NetworkTraffic::NetworkTraffic()
+    :
+    m_DummyServer("127.0.0.1", "16976"),
+    m_DetourSend(reinterpret_cast<void*>(0x03A0CB87), 6, &NetworkTraffic::DetourSend),
+    m_DetourRecv(reinterpret_cast<void*>(0x03A0D0B1), 5, &NetworkTraffic::DetourRecv)
+{
+    m_DetourSend.Attach();
+    m_DetourRecv.Attach();
+}
+
+NetworkTraffic::~NetworkTraffic()
+{
+    m_DetourSend.Detach();
+    m_DetourRecv.Detach();
+}
+
+void NetworkTraffic::OnSend(const void* data, size_t dataSize)
+{
+    m_DummyServer.OnSend(data, dataSize);
+}
+
+void NetworkTraffic::OnRecv(const void* data, size_t dataSize)
+{
+    m_DummyServer.OnRecv(data, dataSize);
+}
+
+__declspec(naked) void NetworkTraffic::DetourSend()
 {
     __asm
     {
@@ -18,7 +44,7 @@ __declspec(naked) static void OnSendThunk()
     }
 }
 
-__declspec(naked) static void OnRecvThunk()
+__declspec(naked) void NetworkTraffic::DetourRecv()
 {
     __asm
     {
@@ -33,33 +59,4 @@ __declspec(naked) static void OnRecvThunk()
         popfd
         ret
     }
-}
-
-
-NetworkTraffic::NetworkTraffic()
-    :
-    m_DummyServer("127.0.0.1", 16976),
-    m_SendHook(reinterpret_cast<void*>(0x03A0CB87), 6, OnSendThunk),
-    m_RecvHook(reinterpret_cast<void*>(0x03A0D0B1), 5, OnRecvThunk)
-{
-    s_Instance = this;
-
-    m_SendHook.Attach();
-    m_RecvHook.Attach();
-}
-
-NetworkTraffic::~NetworkTraffic()
-{
-    m_SendHook.Detach();
-    m_RecvHook.Detach();
-}
-
-void __stdcall NetworkTraffic::OnSend(const uint8_t* data, size_t dataSize)
-{
-    s_Instance->m_DummyServer.OnSend(data, dataSize);
-}
-
-void __stdcall NetworkTraffic::OnRecv(const uint8_t* data, size_t dataSize)
-{
-    s_Instance->m_DummyServer.OnRecv(data, dataSize);
 }

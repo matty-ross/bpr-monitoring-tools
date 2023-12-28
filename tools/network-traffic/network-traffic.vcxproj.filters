@@ -18,12 +18,6 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\WinsockManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Socket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\NetworkTraffic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -32,12 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\WinsockManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\NetworkTraffic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
