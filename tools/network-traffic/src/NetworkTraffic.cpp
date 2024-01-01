@@ -1,6 +1,9 @@
 #include "NetworkTraffic.h"
 
 
+extern NetworkTraffic* g_NetworkTraffic;
+
+
 NetworkTraffic::NetworkTraffic()
     :
     m_DummyServer("127.0.0.1", "16976"),
@@ -36,6 +39,7 @@ __declspec(naked) void NetworkTraffic::DetourSend()
 
         push dword ptr [ebp + 0x10]
         push dword ptr [ebp + 0xC]
+        mov ecx, dword ptr [g_NetworkTraffic]
         call NetworkTraffic::OnSend
 
         popad
@@ -53,6 +57,7 @@ __declspec(naked) void NetworkTraffic::DetourRecv()
 
         push dword ptr [ebp + 0x14]
         push dword ptr [ebp + 0xC]
+        mov ecx, dword ptr [g_NetworkTraffic]
         call NetworkTraffic::OnRecv
 
         popad

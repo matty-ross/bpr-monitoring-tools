@@ -47,7 +47,7 @@ DummyServer::~DummyServer()
 
     shutdown(m_ConnectedClientSocket, SD_BOTH);
     
-    HANDLE threads[] = {m_SendThread, m_RecvThread};
+    HANDLE threads[] = { m_SendThread, m_RecvThread };
     WaitForMultipleObjects(2, threads, TRUE, INFINITE);
 
     CloseHandle(m_RecvThread);
