@@ -23,7 +23,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GameActions.h">
+    <ClInclude Include="src\GameActions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

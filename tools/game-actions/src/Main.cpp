@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-#include "GameActions.h"
+#include "GameActions.hpp"
 
 
 GameActions* g_GameActions = nullptr;
