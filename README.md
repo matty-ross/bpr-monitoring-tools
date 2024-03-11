@@ -1,8 +1,8 @@
 # Burnout Paradise Remastered monitoring tools
 
-<img align="left" src="https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white" />
-<img align="left" src="https://img.shields.io/badge/Visual%20Studio-5C2D91.svg?style=for-the-badge&logo=visual-studio&logoColor=white" />
-<img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" />
+![](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+![](https://img.shields.io/badge/Visual%20Studio-5C2D91?style=for-the-badge&logo=visual-studio&logoColor=white)
+![](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
 
 A collection of tools for monitoring various stuff in Burnout Paradise Remastered.
 
@@ -25,8 +25,8 @@ A tool that creates a dummy local server and simulates the network traffic betwe
 ### Game Actions
 A tool that monitors the game actions and prints their contents into the console.
 - Assumes that the console has already been allocated
-- List of excluded actions can be found [here](https://github.com/matty-ross/bpr-monitoring-tools/blob/main/tools/game-actions/src/GameActions.cpp#L8)
+- List of excluded actions can be found in `/tools/game-actions/src/GameActions.cpp`
 ### Game Events
 A tool that monitors the game events and prints their contents into the console.
 - Assumes that the console has already been allocated
-- List of excluded events can be found [here](https://github.com/matty-ross/bpr-monitoring-tools/blob/main/tools/game-events/src/GameEvents.cpp#L8)
+- List of excluded events can be found in `/tools/game-events/src/GameEvents.cpp`
