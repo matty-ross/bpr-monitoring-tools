@@ -1,4 +1,4 @@
-#include "NetworkTraffic.h"
+#include "NetworkTraffic.hpp"
 
 
 extern NetworkTraffic* g_NetworkTraffic;

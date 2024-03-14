@@ -26,10 +26,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\NetworkTraffic.h">
+    <ClInclude Include="src\NetworkTraffic.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DummyServer.h">
+    <ClInclude Include="src\DummyServer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

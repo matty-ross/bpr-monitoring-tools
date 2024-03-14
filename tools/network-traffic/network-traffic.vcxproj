@@ -164,8 +164,8 @@
     <ClCompile Include="src\NetworkTraffic.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\DummyServer.h" />
-    <ClInclude Include="src\NetworkTraffic.h" />
+    <ClInclude Include="src\DummyServer.hpp" />
+    <ClInclude Include="src\NetworkTraffic.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\libraries\core\core.vcxproj">

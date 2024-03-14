@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-#include "NetworkTraffic.h"
+#include "NetworkTraffic.hpp"
 
 
 NetworkTraffic* g_NetworkTraffic = nullptr;
