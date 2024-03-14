@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\core\DetourHook.h">
+    <ClInclude Include="include\core\DetourHook.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

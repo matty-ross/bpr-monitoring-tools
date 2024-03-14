@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-#include "GameEvents.h"
+#include "GameEvents.hpp"
 
 
 GameEvents* g_GameEvents = nullptr;

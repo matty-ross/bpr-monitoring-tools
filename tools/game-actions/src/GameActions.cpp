@@ -1,4 +1,4 @@
-#include "GameActions.h"
+#include "GameActions.hpp"
 
 #include <cstdio>
 

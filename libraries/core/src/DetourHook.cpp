@@ -1,4 +1,4 @@
-#include "DetourHook.h"
+#include "DetourHook.hpp"
 
 #include <Windows.h>
 
