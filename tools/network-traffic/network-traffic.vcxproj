@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
+    <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{c2a6b8c5-4039-4ae5-874f-5c2f486bbf22}</ProjectGuid>
     <RootNamespace>networktraffic</RootNamespace>
