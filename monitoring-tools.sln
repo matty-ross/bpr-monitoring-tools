@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game-actions", "tools\game-
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game-events", "tools\game-events\game-events.vcxproj", "{FDABD851-E892-4847-B876-ECEF9A5E8D02}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "direct-3d", "tools\direct-3d\direct-3d.vcxproj", "{474B5F88-FD18-49AC-9D69-63736B2B16DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -55,6 +57,14 @@ Global
 		{FDABD851-E892-4847-B876-ECEF9A5E8D02}.Release|x64.Build.0 = Release|x64
 		{FDABD851-E892-4847-B876-ECEF9A5E8D02}.Release|x86.ActiveCfg = Release|Win32
 		{FDABD851-E892-4847-B876-ECEF9A5E8D02}.Release|x86.Build.0 = Release|Win32
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF}.Debug|x64.ActiveCfg = Debug|x64
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF}.Debug|x64.Build.0 = Debug|x64
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF}.Debug|x86.ActiveCfg = Debug|Win32
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF}.Debug|x86.Build.0 = Debug|Win32
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF}.Release|x64.ActiveCfg = Release|x64
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF}.Release|x64.Build.0 = Release|x64
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF}.Release|x86.ActiveCfg = Release|Win32
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +74,7 @@ Global
 		{C2A6B8C5-4039-4AE5-874F-5C2F486BBF22} = {D30EF302-00F9-4421-85FB-F36540CC24F3}
 		{AA3538DC-4B63-42A3-92E5-7562B11873D0} = {D30EF302-00F9-4421-85FB-F36540CC24F3}
 		{FDABD851-E892-4847-B876-ECEF9A5E8D02} = {D30EF302-00F9-4421-85FB-F36540CC24F3}
+		{474B5F88-FD18-49AC-9D69-63736B2B16DF} = {D30EF302-00F9-4421-85FB-F36540CC24F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09373673-009B-44AC-B5C7-D77DD47D8267}
