@@ -17,7 +17,9 @@ private:
 
 private:
     static void DetourCreateBlendState();
+    static void DetourCreateDepthStencilState();
 
 private:
     DetourHook m_DetourCreateBlendState;
+    DetourHook m_DetourCreateDepthStencilState;
 };
