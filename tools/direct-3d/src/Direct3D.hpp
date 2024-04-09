@@ -14,4 +14,10 @@ public:
 
 private:
     void OnCreate(HRESULT hresult, const char* functionName);
+
+private:
+    static void DetourCreateBlendState();
+
+private:
+    DetourHook m_DetourCreateBlendState;
 };
