@@ -1,0 +1,15 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/libraries/">
+    <Project Path="libraries/core/core.vcxproj" Id="0f58da0f-6413-471c-852b-673399b93645" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/direct-3d/direct-3d.vcxproj" Id="474b5f88-fd18-49ac-9d69-63736b2b16df" />
+    <Project Path="tools/game-actions/game-actions.vcxproj" Id="aa3538dc-4b63-42a3-92e5-7562b11873d0" />
+    <Project Path="tools/game-events/game-events.vcxproj" Id="fdabd851-e892-4847-b876-ecef9a5e8d02" />
+    <Project Path="tools/network-traffic/network-traffic.vcxproj" Id="c2a6b8c5-4039-4ae5-874f-5c2f486bbf22" />
+  </Folder>
+</Solution>
