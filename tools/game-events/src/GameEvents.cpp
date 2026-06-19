@@ -1,77 +1,79 @@
+#include <cstdint>
+#include <cstdio>
+#include <exception>
+#include <Windows.h>
+
+#include "core/Pointer.hpp"
+#include "core/Patch.hpp"
+
 #include "GameEvents.hpp"
 
-#include <cstdio>
 
-#include <algorithm>
-
-
-extern GameEvents* g_GameEvents;
+static constexpr char k_Name[] = "Game Events";
 
 
-static constexpr int32_t k_ExcludedGameEventIDs[] =
+GameEvents GameEvents::s_Instance;
+
+
+namespace Patches
 {
-    53,
-    70,
-    72, // near miss chain in progeress
-    75, // drifting
-    76, // spinning
-    77, // in air
-    78, // wheelie
-    79, // wheelie oncoming
-    82, // oncoming
-    84, // reverse oncoming
-    87,
-    88, // traffic checking chain
-    90,
-    131,
-    135,
-    137,
-    138,
-};
+    __declspec(naked) static void HookProcessGameEvents()
+    {
+        __asm
+        {
+            pushfd
+            pushad
+
+            push dword ptr [esi - 0xC]
+            push dword ptr [esi - 0x10]
+            push esi
+            mov ecx, offset GameEvents::s_Instance
+            call GameEvents::OnGameEvent
+
+            popad
+            popfd
+
+            push 0x00A254E4
+            ret
+        }
+    }
+}
 
 
 GameEvents::GameEvents()
     :
-    m_DetourProcessGameEvents(reinterpret_cast<void*>(0x00A254DD), 7, &GameEvents::DetourProcessGameEvents)
+    m_Logger(k_Name)
 {
-    m_DetourProcessGameEvents.Attach();
 }
 
-GameEvents::~GameEvents()
+GameEvents& GameEvents::Get()
 {
-    m_DetourProcessGameEvents.Detach();
+    return s_Instance;
 }
 
-void GameEvents::OnGameEvent(const uint8_t* eventData, int32_t eventID, uint32_t eventSize)
+void GameEvents::OnProcessAttach()
 {
-    if (std::binary_search(std::begin(k_ExcludedGameEventIDs), std::end(k_ExcludedGameEventIDs), eventID))
+    try
     {
-        return;
+        Core::Patch(0x00A254DD, 7, m_Logger).WriteJMP(Patches::HookProcessGameEvents);
     }
-
-    printf_s("%4d  [%4X] ", eventID, eventSize);
-    for (uint32_t i = 0; i < eventSize; ++i)
+    catch (const std::exception& ex)
     {
-        printf_s(" %02X", eventData[i]);
+        m_Logger.Error("%s", ex.what());
+        MessageBoxA(NULL, ex.what(), k_Name, MB_ICONERROR);
+    }
+}
+
+void GameEvents::OnProcessDetach()
+{
+}
+
+void GameEvents::OnGameEvent(void* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const
+{
+    printf_s("%4d  [%4X] ", gameEventID, gameEventSize);
+    for (uint32_t i = 0; i < gameEventSize; ++i)
+    {
+        printf_s(" %02X", Core::Pointer(gameEvent).at(i).as<uint8_t>());
     }
     putchar('\n');
-}
-
-__declspec(naked) void GameEvents::DetourProcessGameEvents()
-{
-    __asm
-    {
-        pushfd
-        pushad
-
-        push dword ptr [esi - 0xC]
-        push dword ptr [esi - 0x10]
-        push esi
-        mov ecx, dword ptr [g_GameEvents]
-        call GameEvents::OnGameEvent
-
-        popad
-        popfd
-        ret
-    }
 }

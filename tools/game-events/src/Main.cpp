@@ -3,9 +3,6 @@
 #include "GameEvents.hpp"
 
 
-GameEvents* g_GameEvents = nullptr;
-
-
 BOOL WINAPI DllMain(
     _In_ HINSTANCE hinstDLL,
     _In_ DWORD     fdwReason,
@@ -15,15 +12,11 @@ BOOL WINAPI DllMain(
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
-        {
-            g_GameEvents = new GameEvents();
-        }
+        GameEvents::Get().OnProcessAttach();
         break;
 
     case DLL_PROCESS_DETACH:
-        {
-            delete g_GameEvents;
-        }
+        GameEvents::Get().OnProcessDetach();
         break;
     }
 

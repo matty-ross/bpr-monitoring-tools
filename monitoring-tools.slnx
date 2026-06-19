@@ -3,6 +3,9 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/tools/">
+    <Project Path="tools/game-events/game-events.vcxproj" Id="86c8649e-b06e-4184-93a2-13acd5985b31" />
+  </Folder>
   <Folder Name="/vendor/">
     <Project Path="vendor/core-utils/core-utils.vcxproj" Id="fdfa5ac5-a8e2-4d83-a900-5f30e4dfdb69" />
   </Folder>

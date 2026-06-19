@@ -3,21 +3,27 @@
 
 #include <cstdint>
 
-#include "core/DetourHook.hpp"
+#include "core/Logger.hpp"
 
 
 class GameEvents
 {
-public:
+private:
     GameEvents();
-    ~GameEvents();
+
+public:
+    static GameEvents& Get();
+
+public:
+    void OnProcessAttach();
+    void OnProcessDetach();
 
 private:
-    void OnGameEvent(const uint8_t* eventData, int32_t eventID, uint32_t eventSize);
+    void OnGameEvent(void* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const;
 
 private:
-    static void DetourProcessGameEvents();
+    static GameEvents s_Instance;
 
 private:
-    DetourHook m_DetourProcessGameEvents;
+    Core::Logger m_Logger;
 };
