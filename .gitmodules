@@ -1,0 +1,3 @@
+[submodule "vendor/core-utils"]
+	path = vendor/core-utils
+	url = https://github.com/matty-ross/core-utils.git
