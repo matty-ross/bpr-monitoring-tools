@@ -4,6 +4,7 @@
 #include <Windows.h>
 
 #include "core/Pointer.hpp"
+#include "core/Logger.hpp"
 #include "core/Patch.hpp"
 
 #include "GameEvents.hpp"
@@ -17,7 +18,7 @@ GameEvents GameEvents::s_Instance;
 
 namespace Patches
 {
-    __declspec(naked) static void HookProcessGameEvents()
+    __declspec(naked) static void HookPrintGameEvent()
     {
         __asm
         {
@@ -28,13 +29,12 @@ namespace Patches
             push dword ptr [esi - 0x10]
             push esi
             mov ecx, offset GameEvents::s_Instance
-            call GameEvents::OnGameEvent
+            call GameEvents::PrintGameEvent
 
             popad
             popfd
 
-            push 0x00A254E4
-            ret
+            jmp dword ptr [ecx * 4 + 0x00A28E10]
         }
     }
 }
@@ -55,7 +55,12 @@ void GameEvents::OnProcessAttach()
 {
     try
     {
-        Core::Patch(0x00A254DD, 7, m_Logger).WriteJMP(Patches::HookProcessGameEvents);
+        Core::Logger::Initialize();
+
+        FILE* newStdout = nullptr;
+        freopen_s(&newStdout, "CONOUT$", "w", stdout);
+
+        Core::Patch(0x00A254DD, 7, m_Logger).WriteJMP(Patches::HookPrintGameEvent);
     }
     catch (const std::exception& ex)
     {
@@ -68,7 +73,7 @@ void GameEvents::OnProcessDetach()
 {
 }
 
-void GameEvents::OnGameEvent(void* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const
+void GameEvents::PrintGameEvent(void* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const
 {
     printf_s("%4d  [%4X] ", gameEventID, gameEventSize);
     for (uint32_t i = 0; i < gameEventSize; ++i)

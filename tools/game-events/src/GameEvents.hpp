@@ -19,7 +19,7 @@ public:
     void OnProcessDetach();
 
 private:
-    void OnGameEvent(void* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const;
+    void PrintGameEvent(void* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const;
 
 private:
     static GameEvents s_Instance;
