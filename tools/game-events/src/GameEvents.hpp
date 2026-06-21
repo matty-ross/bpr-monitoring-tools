@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include <cstddef>
 #include <cstdint>
 
 #include "core/Logger.hpp"
@@ -19,7 +20,7 @@ public:
     void OnProcessDetach();
 
 private:
-    void PrintGameEvent(void* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const;
+    void PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const;
 
 private:
     static GameEvents s_Instance;

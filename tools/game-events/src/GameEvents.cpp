@@ -1,9 +1,9 @@
+#include <cstddef>
 #include <cstdint>
 #include <cstdio>
 #include <exception>
 #include <Windows.h>
 
-#include "core/Pointer.hpp"
 #include "core/Logger.hpp"
 #include "core/Patch.hpp"
 
@@ -34,6 +34,7 @@ namespace Patches
             popad
             popfd
 
+            // Original code.
             jmp dword ptr [ecx * 4 + 0x00A28E10]
         }
     }
@@ -73,12 +74,12 @@ void GameEvents::OnProcessDetach()
 {
 }
 
-void GameEvents::PrintGameEvent(void* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const
+void GameEvents::PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const
 {
     printf_s("%4d  [%4X] ", gameEventID, gameEventSize);
     for (uint32_t i = 0; i < gameEventSize; ++i)
     {
-        printf_s(" %02X", Core::Pointer(gameEvent).at(i).as<uint8_t>());
+        printf_s(" %02X", gameEvent[i]);
     }
     putchar('\n');
 }
