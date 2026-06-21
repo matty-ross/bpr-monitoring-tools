@@ -1,89 +1,89 @@
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
+#include <exception>
+#include <Windows.h>
+
+#include "core/Logger.hpp"
+#include "core/Patch.hpp"
+
 #include "GameActions.hpp"
 
-#include <cstdio>
 
-#include <algorithm>
-
-
-extern GameActions* g_GameActions;
+static constexpr char k_Name[] = "Game Actions";
 
 
-static constexpr int32_t k_ExcludedGameActionIDs[] =
+GameActions GameActions::s_Instance;
+
+
+namespace Patches
 {
-    15, // completed stunt
-    16, // in progress stunt
-    93,
-    122, // traffic checking chain
-    123, // trigger
-    124, // killzone
-    144,
-    159,
-    168,
-    197,
-    201, // drifting
-    202, // spinning
-    203, // in air
-    204, // wheelie
-    205, // oncoming
-    206, // tailgating
-    208,
-    209, // event state response
-    210,
-    218,
-    225,
-    227,
-    235,
-    253,
-    298,
-    301,
-    304,
-    348,
-    353,
-};
+    __declspec(naked) static void HookPrintGameAction()
+    {
+        __asm
+        {
+            pushfd
+            pushad
+
+            push dword ptr [ecx - 0xC]
+            push dword ptr [ecx - 0x10]
+            push ecx
+            mov ecx, offset GameActions::s_Instance
+            call GameActions::PrintGameAction
+
+            popad
+            popfd
+            
+            // Original code.
+            sub ecx, edi
+            mov eax, 0
+
+            push 0x07050A60
+            ret
+        }
+    }
+}
 
 
 GameActions::GameActions()
     :
-    m_DetourCheckGameActions(reinterpret_cast<void*>(0x07050A59), 7, &GameActions::DetourCheckGameActions)
+    m_Logger(k_Name)
 {
-    m_DetourCheckGameActions.Attach();
 }
 
-GameActions::~GameActions()
+GameActions& GameActions::Get()
 {
-    m_DetourCheckGameActions.Detach();
+    return s_Instance;
 }
 
-void GameActions::OnGameAction(const uint8_t* actionData, int32_t actionID, uint32_t actionSize)
+void GameActions::OnProcessAttach()
 {
-    if (std::binary_search(std::begin(k_ExcludedGameActionIDs), std::end(k_ExcludedGameActionIDs), actionID))
+    try
     {
-        return;
+        Core::Logger::Initialize();
+
+        FILE* newStdout = nullptr;
+        freopen_s(&newStdout, "CONOUT$", "w", stdout);
+
+        Core::Patch(0x07050A59, 7, m_Logger).WriteJMP(Patches::HookPrintGameAction);
     }
-
-    printf_s("%4d  [%4X] ", actionID, actionSize);
-    for (uint32_t i = 0; i < actionSize; ++i)
+    catch (const std::exception& ex)
     {
-        printf_s(" %02X", actionData[i]);
+        m_Logger.Error("%s", ex.what());
+        MessageBoxA(NULL, ex.what(), k_Name, MB_ICONERROR);
+    }
+}
+
+void GameActions::OnProcessDetach()
+{
+}
+
+void GameActions::PrintGameAction(const std::byte* gameAction, int32_t gameActionID, uint32_t gameActionSize) const
+{
+    printf_s("%4d  [%4X] ", gameActionID, gameActionSize);
+    for (uint32_t i = 0; i < gameActionSize; ++i)
+    {
+        printf_s(" %02X", gameAction[i]);
     }
     putchar('\n');
-}
-
-__declspec(naked) void GameActions::DetourCheckGameActions()
-{
-    __asm
-    {
-        pushfd
-        pushad
-
-        push dword ptr [ecx - 0xC]
-        push dword ptr [ecx - 0x10]
-        push ecx
-        mov ecx, dword ptr [g_GameActions]
-        call GameActions::OnGameAction
-
-        popad
-        popfd
-        ret
-    }
 }

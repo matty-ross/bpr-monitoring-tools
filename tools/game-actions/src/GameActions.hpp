@@ -1,23 +1,30 @@
 #pragma once
 
 
+#include <cstddef>
 #include <cstdint>
 
-#include "core/DetourHook.hpp"
+#include "core/Logger.hpp"
 
 
 class GameActions
 {
-public:
+private:
     GameActions();
-    ~GameActions();
+
+public:
+    static GameActions& Get();
+
+public:
+    void OnProcessAttach();
+    void OnProcessDetach();
 
 private:
-    void OnGameAction(const uint8_t* actionData, int32_t actionID, uint32_t actionSize);
+    void PrintGameAction(const std::byte* gameAction, int32_t gameActionID, uint32_t gameActionSize) const;
 
 private:
-    static void DetourCheckGameActions();
+    static GameActions s_Instance;
 
 private:
-    DetourHook m_DetourCheckGameActions;
+    Core::Logger m_Logger;
 };

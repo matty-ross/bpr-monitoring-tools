@@ -4,6 +4,7 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/tools/">
+    <Project Path="tools/game-actions/game-actions.vcxproj" Id="275a0a54-108d-4349-833a-b9c389da1948" />
     <Project Path="tools/game-events/game-events.vcxproj" Id="86c8649e-b06e-4184-93a2-13acd5985b31" />
   </Folder>
   <Folder Name="/vendor/">
