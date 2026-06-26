@@ -16,6 +16,9 @@ static constexpr char k_Name[] = "Game Events";
 GameEvents GameEvents::s_Instance;
 
 
+extern "C" __declspec(dllexport) bool g_ExcludedGameEventIDs[500] = {};
+
+
 namespace Patches
 {
     __declspec(naked) static void HookPrintGameEvent()
@@ -76,10 +79,13 @@ void GameEvents::OnProcessDetach()
 
 void GameEvents::PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const
 {
-    printf_s("%4d  [%4X] ", gameEventID, gameEventSize);
-    for (uint32_t i = 0; i < gameEventSize; ++i)
+    if (!g_ExcludedGameEventIDs[gameEventID])
     {
-        printf_s(" %02X", gameEvent[i]);
+        printf_s("%4d  [%4X] ", gameEventID, gameEventSize);
+        for (uint32_t i = 0; i < gameEventSize; ++i)
+        {
+            printf_s(" %02X", gameEvent[i]);
+        }
+        putchar('\n');
     }
-    putchar('\n');
 }
