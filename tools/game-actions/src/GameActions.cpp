@@ -16,6 +16,9 @@ static constexpr char k_Name[] = "Game Actions";
 GameActions GameActions::s_Instance;
 
 
+extern "C" __declspec(dllexport) bool g_ExcludedGameActionIDs[500] = {};
+
+
 namespace Patches
 {
     __declspec(naked) static void HookPrintGameAction()
@@ -33,7 +36,7 @@ namespace Patches
 
             popad
             popfd
-            
+
             // Original code.
             sub ecx, edi
             mov eax, 0
@@ -80,10 +83,13 @@ void GameActions::OnProcessDetach()
 
 void GameActions::PrintGameAction(const std::byte* gameAction, int32_t gameActionID, uint32_t gameActionSize) const
 {
-    printf_s("%4d  [%4X] ", gameActionID, gameActionSize);
-    for (uint32_t i = 0; i < gameActionSize; ++i)
+    if (!g_ExcludedGameActionIDs[gameActionID])
     {
-        printf_s(" %02X", gameAction[i]);
+        printf_s("%4d  [%4X] ", gameActionID, gameActionSize);
+        for (uint32_t i = 0; i < gameActionSize; ++i)
+        {
+            printf_s(" %02X", gameAction[i]);
+        }
+        putchar('\n');
     }
-    putchar('\n');
 }
