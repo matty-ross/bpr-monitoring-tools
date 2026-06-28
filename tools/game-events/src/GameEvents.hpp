@@ -9,6 +9,9 @@
 
 class GameEvents
 {
+public:
+    static constexpr char k_Name[] = "Game Events";
+
 private:
     GameEvents();
 
@@ -16,8 +19,10 @@ public:
     static GameEvents& Get();
 
 public:
-    void OnProcessAttach();
-    void OnProcessDetach();
+    void Load();
+
+private:
+    static void HookPrintGameEvent();
 
 private:
     void PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const;

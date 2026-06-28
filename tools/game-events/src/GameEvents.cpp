@@ -10,38 +10,10 @@
 #include "GameEvents.hpp"
 
 
-static constexpr char k_Name[] = "Game Events";
-
-
-GameEvents GameEvents::s_Instance;
-
-
 extern "C" __declspec(dllexport) bool g_ExcludedGameEventIDs[500] = {};
 
 
-namespace Patches
-{
-    __declspec(naked) static void HookPrintGameEvent()
-    {
-        __asm
-        {
-            pushfd
-            pushad
-
-            push dword ptr [esi - 0xC]
-            push dword ptr [esi - 0x10]
-            push esi
-            mov ecx, offset GameEvents::s_Instance
-            call GameEvents::PrintGameEvent
-
-            popad
-            popfd
-
-            // Original code.
-            jmp dword ptr [ecx * 4 + 0x00A28E10]
-        }
-    }
-}
+GameEvents GameEvents::s_Instance;
 
 
 GameEvents::GameEvents()
@@ -55,7 +27,7 @@ GameEvents& GameEvents::Get()
     return s_Instance;
 }
 
-void GameEvents::OnProcessAttach()
+void GameEvents::Load()
 {
     try
     {
@@ -64,7 +36,7 @@ void GameEvents::OnProcessAttach()
         FILE* newStdout = nullptr;
         freopen_s(&newStdout, "CONOUT$", "w", stdout);
 
-        Core::Patch(0x00A254DD, 7, m_Logger).WriteJMP(Patches::HookPrintGameEvent);
+        Core::Patch(0x00A254DD, 7, m_Logger).WriteJMP(HookPrintGameEvent);
     }
     catch (const std::exception& ex)
     {
@@ -73,8 +45,25 @@ void GameEvents::OnProcessAttach()
     }
 }
 
-void GameEvents::OnProcessDetach()
+__declspec(naked) void GameEvents::HookPrintGameEvent()
 {
+    __asm
+    {
+        pushfd
+        pushad
+
+        push dword ptr [esi - 0xC]
+        push dword ptr [esi - 0x10]
+        push esi
+        mov ecx, offset s_Instance
+        call PrintGameEvent
+
+        popad
+        popfd
+
+        // Original code.
+        jmp dword ptr [ecx * 4 + 0x00A28E10]
+    }
 }
 
 void GameEvents::PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const
