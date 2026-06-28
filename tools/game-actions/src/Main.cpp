@@ -12,11 +12,7 @@ BOOL WINAPI DllMain(
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
-        GameActions::Get().OnProcessAttach();
-        break;
-
-    case DLL_PROCESS_DETACH:
-        GameActions::Get().OnProcessDetach();
+        GameActions::Get().Load();
         break;
     }
 

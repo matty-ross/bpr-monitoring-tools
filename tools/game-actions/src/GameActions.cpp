@@ -10,42 +10,10 @@
 #include "GameActions.hpp"
 
 
-static constexpr char k_Name[] = "Game Actions";
-
-
-GameActions GameActions::s_Instance;
-
-
 extern "C" __declspec(dllexport) bool g_ExcludedGameActionIDs[500] = {};
 
 
-namespace Patches
-{
-    __declspec(naked) static void HookPrintGameAction()
-    {
-        __asm
-        {
-            pushfd
-            pushad
-
-            push dword ptr [ecx - 0xC]
-            push dword ptr [ecx - 0x10]
-            push ecx
-            mov ecx, offset GameActions::s_Instance
-            call GameActions::PrintGameAction
-
-            popad
-            popfd
-
-            // Original code.
-            sub ecx, edi
-            mov eax, 0
-
-            push 0x07050A60
-            ret
-        }
-    }
-}
+GameActions GameActions::s_Instance;
 
 
 GameActions::GameActions()
@@ -59,7 +27,7 @@ GameActions& GameActions::Get()
     return s_Instance;
 }
 
-void GameActions::OnProcessAttach()
+void GameActions::Load()
 {
     try
     {
@@ -68,7 +36,7 @@ void GameActions::OnProcessAttach()
         FILE* newStdout = nullptr;
         freopen_s(&newStdout, "CONOUT$", "w", stdout);
 
-        Core::Patch(0x07050A59, 7, m_Logger).WriteJMP(Patches::HookPrintGameAction);
+        Core::Patch(0x07050A59, 7, m_Logger).WriteJMP(HookPrintGameAction);
     }
     catch (const std::exception& ex)
     {
@@ -77,8 +45,29 @@ void GameActions::OnProcessAttach()
     }
 }
 
-void GameActions::OnProcessDetach()
+__declspec(naked) void GameActions::HookPrintGameAction()
 {
+    __asm
+    {
+        pushfd
+        pushad
+
+        push dword ptr [ecx - 0xC]
+        push dword ptr [ecx - 0x10]
+        push ecx
+        mov ecx, offset s_Instance
+        call PrintGameAction
+
+        popad
+        popfd
+
+        // Original code.
+        sub ecx, edi
+        mov eax, 0
+
+        push 0x07050A60
+        ret
+    }
 }
 
 void GameActions::PrintGameAction(const std::byte* gameAction, int32_t gameActionID, uint32_t gameActionSize) const
