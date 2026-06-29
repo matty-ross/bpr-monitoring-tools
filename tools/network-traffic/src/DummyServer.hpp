@@ -1,37 +1,37 @@
 #pragma once
 
 
-#include <cstdint>
-
-#include <Windows.h>
+#include <cstddef>
+//#include <Windows.h>
 #include <WinSock2.h>
+
+#include "core/Logger.hpp"
 
 
 class DummyServer
 {
 public:
-    DummyServer(const char* host, const char* port);
-    ~DummyServer();
+    DummyServer(int port, const Core::Logger& logger);
 
 public:
-    void OnSend(const void* data, size_t dataSize);
-    void OnRecv(const void* data, size_t dataSize);
+    void Load();
+    void Unload();
+
+    void SendData(const void* data, size_t dataSize) const;
 
 private:
-    static DWORD CALLBACK SendThreadProc(LPVOID lpParameter);
-    static DWORD CALLBACK RecvThreadProc(LPVOID lpParameter);
+    void ServerHandler();
 
 private:
-    SOCKET m_ClientSocket = INVALID_SOCKET;
+    int m_Port = 0;
+
     SOCKET m_ServerSocket = INVALID_SOCKET;
+    SOCKET m_ClientSocket = INVALID_SOCKET;
     SOCKET m_ConnectedClientSocket = INVALID_SOCKET;
-    
-    HANDLE m_SendThread = nullptr;
-    HANDLE m_RecvThread = nullptr;
-    
-    const void* m_RecvData = nullptr;
-    size_t m_RecvDataSize = 0;
-    bool m_NewRecvData = false;
-    
+
+    HANDLE m_ServerHandlerThreadHandle = NULL;
+
     bool m_Running = false;
+
+    const Core::Logger& m_Logger;
 };
