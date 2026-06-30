@@ -167,6 +167,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\NetworkTraffic.cpp" />
     <ClCompile Include="src\DummyServer.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
@@ -176,6 +177,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\NetworkTraffic.hpp" />
     <ClInclude Include="src\DummyServer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
