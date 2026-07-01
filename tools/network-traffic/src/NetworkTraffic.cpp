@@ -1,7 +1,6 @@
 #include <exception>
-#include <WinSock2.h>
+#include <Windows.h>
 
-#include "core/WindowsException.hpp"
 #include "core/Logger.hpp"
 
 #include "NetworkTraffic.hpp"
@@ -28,16 +27,6 @@ void NetworkTraffic::Load()
     {
         Core::Logger::Initialize();
 
-        WSADATA wsaData = {};
-        int result = WSAStartup(MAKEWORD(2, 2), &wsaData);
-        if (result != 0)
-        {
-            throw Core::WindowsException(
-                HRESULT_FROM_WIN32(result),
-                "Failed to initialize WinSock."
-            );
-        }
-
         m_DummyServer.Load();
     }
     catch (const std::exception& ex)
@@ -52,8 +41,6 @@ void NetworkTraffic::Unload()
     try
     {
         m_DummyServer.Unload();
-
-        WSACleanup();
     }
     catch (const std::exception& ex)
     {
