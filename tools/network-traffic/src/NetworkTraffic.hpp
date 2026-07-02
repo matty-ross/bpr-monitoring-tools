@@ -22,6 +22,10 @@ public:
     void Unload();
 
 private:
+    static void HookEncryptData();
+    static void HookDecryptData();
+
+private:
     static NetworkTraffic s_Instance;
 
 private:

@@ -38,27 +38,27 @@ void DummyServer::Load()
     };
     address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 
-    m_ServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    bind(m_ServerSocket, reinterpret_cast<sockaddr*>(&address), sizeof(address));
-    listen(m_ServerSocket, SOMAXCONN);
+    SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    bind(serverSocket, reinterpret_cast<sockaddr*>(&address), sizeof(address));
+    listen(serverSocket, SOMAXCONN);
     m_Logger.Info("Created server socket.");
 
     m_ClientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     connect(m_ClientSocket, reinterpret_cast<sockaddr*>(&address), sizeof(address));
     m_Logger.Info("Created client socket.");
 
-    m_ConnectedClientSocket = accept(m_ServerSocket, nullptr, nullptr);
-    m_Logger.Info("Connect the server and client sockets.");
+    m_ConnectedClientSocket = accept(serverSocket, nullptr, nullptr);
+    closesocket(serverSocket);
+    m_Logger.Info("Connected the server and client sockets.");
 }
 
 void DummyServer::Unload()
 {
     shutdown(m_ConnectedClientSocket, SD_BOTH);
-    shutdown(m_ClientSocket, SD_BOTH);
-
     closesocket(m_ConnectedClientSocket);
+    
+    shutdown(m_ClientSocket, SD_BOTH);
     closesocket(m_ClientSocket);
-    closesocket(m_ServerSocket);
 
     WSACleanup();
 }

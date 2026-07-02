@@ -22,7 +22,6 @@ public:
     void ServerSendData(const void* data, int dataSize) const;
 
 private:
-    SOCKET m_ServerSocket = INVALID_SOCKET;
     SOCKET m_ClientSocket = INVALID_SOCKET;
     SOCKET m_ConnectedClientSocket = INVALID_SOCKET;
 
