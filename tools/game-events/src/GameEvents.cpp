@@ -36,7 +36,7 @@ void GameEvents::Load()
         FILE* newStdout = nullptr;
         freopen_s(&newStdout, "CONOUT$", "w", stdout);
 
-        Core::Patch(0x00A254DD, 7, m_Logger).WriteJMP(HookPrintGameEvent);
+        Core::Patch(0x00A254DD, 7, m_Logger).WriteJMP(Hook_PrintGameEvent);
     }
     catch (const std::exception& ex)
     {
@@ -45,7 +45,7 @@ void GameEvents::Load()
     }
 }
 
-__declspec(naked) void GameEvents::HookPrintGameEvent()
+__declspec(naked) void GameEvents::Hook_PrintGameEvent()
 {
     __asm
     {
@@ -55,8 +55,8 @@ __declspec(naked) void GameEvents::HookPrintGameEvent()
         push dword ptr [esi - 0xC]
         push dword ptr [esi - 0x10]
         push esi
-        mov ecx, offset s_Instance
-        call PrintGameEvent
+        mov ecx, offset GameEvents::s_Instance
+        call GameEvents::PrintGameEvent
 
         popad
         popfd

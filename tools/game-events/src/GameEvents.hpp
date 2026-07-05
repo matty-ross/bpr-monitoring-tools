@@ -9,9 +9,6 @@
 
 class GameEvents
 {
-public:
-    static constexpr char k_Name[] = "Game Events";
-
 private:
     GameEvents();
 
@@ -22,12 +19,14 @@ public:
     void Load();
 
 private:
-    static void HookPrintGameEvent();
+    static void Hook_PrintGameEvent();
 
 private:
     void PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const;
 
 private:
+    static constexpr char k_Name[] = "Game Events";
+
     static GameEvents s_Instance;
 
 private:
