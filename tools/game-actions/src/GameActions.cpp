@@ -36,7 +36,7 @@ void GameActions::Load()
         FILE* newStdout = nullptr;
         freopen_s(&newStdout, "CONOUT$", "w", stdout);
 
-        Core::Patch(0x07050A59, 7, m_Logger).WriteJMP(HookPrintGameAction);
+        Core::Patch(0x07050A59, 7, m_Logger).WriteJMP(Hook_PrintGameAction);
     }
     catch (const std::exception& ex)
     {
@@ -45,7 +45,7 @@ void GameActions::Load()
     }
 }
 
-__declspec(naked) void GameActions::HookPrintGameAction()
+__declspec(naked) void GameActions::Hook_PrintGameAction()
 {
     __asm
     {
@@ -55,8 +55,8 @@ __declspec(naked) void GameActions::HookPrintGameAction()
         push dword ptr [ecx - 0xC]
         push dword ptr [ecx - 0x10]
         push ecx
-        mov ecx, offset s_Instance
-        call PrintGameAction
+        mov ecx, offset GameActions::s_Instance
+        call GameActions::PrintGameAction
 
         popad
         popfd

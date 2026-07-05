@@ -9,9 +9,6 @@
 
 class GameActions
 {
-public:
-    static constexpr char k_Name[] = "Game Actions";
-
 private:
     GameActions();
 
@@ -22,12 +19,14 @@ public:
     void Load();
 
 private:
-    static void HookPrintGameAction();
+    static void Hook_PrintGameAction();
 
 private:
     void PrintGameAction(const std::byte* gameAction, int32_t gameActionID, uint32_t gameActionSize) const;
 
 private:
+    static constexpr char k_Name[] = "Game Actions";
+
     static GameActions s_Instance;
 
 private:
