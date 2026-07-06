@@ -5,6 +5,7 @@
 #include "core/Patch.hpp"
 
 #include "NetworkTraffic.hpp"
+#include "DummyServer.hpp"
 
 
 NetworkTraffic NetworkTraffic::s_Instance;
@@ -30,8 +31,8 @@ void NetworkTraffic::Load()
 
         m_DummyServer.Load();
 
-        Core::Patch(0x03A0CB84, 6, m_Logger).WriteJMP(HookEncryptData);
-        Core::Patch(0x03A0D0B1, 5, m_Logger).WriteJMP(HookDecryptData);
+        Core::Patch(0x0055F543, 6, m_Logger).WriteJMP(Hook_ClientSendData);
+        Core::Patch(0x0055F255, 6, m_Logger).WriteJMP(Hook_ServerSendData);
     }
     catch (const std::exception& ex)
     {
@@ -53,50 +54,78 @@ void NetworkTraffic::Unload()
     }
 }
 
-__declspec(naked) void NetworkTraffic::HookEncryptData()
+__declspec(naked) void NetworkTraffic::Hook_ClientSendData()
 {
+    // int32_t _SendPacket(ProtoSSLRefT* pState, uint8_t uType, void* pHeadPtr, int32_t iHeadLen, void* pBodyPtr, int32_t iBodyLen)
+    
     __asm
     {
         pushfd
         pushad
 
-        push dword ptr [ebp + 0x10]
-        push dword ptr [ebp + 0xC]
+        // uType == 0x17 (TLS application data)
+        cmp byte ptr [ebp + 0xC], 0x17
+        jne _end
+
+        push dword ptr [ebp + 0x1C] // iBodyLen
+        push dword ptr [ebp + 0x18] // pBodyPtr
         mov ecx, offset NetworkTraffic::s_Instance.m_DummyServer
         call DummyServer::ClientSendData
 
+    _end:
         popad
         popfd
 
         // Original code.
-        push dword ptr [ebp + 0x10]
-        mov eax, dword ptr [ebp + 0xC]
+        mov ecx, dword ptr [ebp + 0x10]
+        mov eax, dword ptr [ebp + 0x8]
 
-        push 0x03A0CB8A
+        // Jump back.
+        push 0x0055F549
         ret
     }
 }
 
-__declspec(naked) void NetworkTraffic::HookDecryptData()
+__declspec(naked) void NetworkTraffic::Hook_ServerSendData()
 {
+    // int32_t _RecvPacket(ProtoSSLRefT* pState)
+
     __asm
     {
         pushfd
         pushad
 
-        push dword ptr [ebp + 0x14]
-        push dword ptr [ebp + 0xC]
+        // esi: SecureStateT* pSecure = pState->pSecure
+        
+        mov eax, dword ptr [esi + 0x18] // int32_t pSecure->iRecvSize
+        mov ebx, dword ptr [esi + 0x1C] // int32_t pSecure->iRecvBase
+        lea ecx, [esi + 0xBD1C] // uint8_t* pSecure->RecvData
+
+        // pSecure->RecvData[0] == 0x17 (TLS application data)
+        cmp byte ptr [ecx], 0x17
+        jne _end
+
+        // size = pSecure->iRecvSize - pSecure->iRecvBase
+        sub eax, ebx
+        
+        // data = pSecure->RecvData + pSecure->iRecvBase
+        add ecx, ebx
+        
+        push eax
+        push ecx
         mov ecx, offset NetworkTraffic::s_Instance.m_DummyServer
         call DummyServer::ServerSendData
 
+    _end:
         popad
         popfd
-
+        
         // Original code.
-        add esp, 0x10
-        test eax, eax
+        inc dword ptr [esi + 0x10]
+        mov eax, dword ptr [esi + 0x18]
 
-        push 0x03A0D0B6
+        // Jump back.
+        push 0x0055F25B
         ret
     }
 }

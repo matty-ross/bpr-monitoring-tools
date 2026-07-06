@@ -8,9 +8,6 @@
 
 class NetworkTraffic
 {
-public:
-    static constexpr char k_Name[] = "Network Traffic";
-
 private:
     NetworkTraffic();
 
@@ -22,10 +19,12 @@ public:
     void Unload();
 
 private:
-    static void HookEncryptData();
-    static void HookDecryptData();
+    static void Hook_ClientSendData();
+    static void Hook_ServerSendData();
 
 private:
+    static constexpr char k_Name[] = "Network Traffic";
+
     static NetworkTraffic s_Instance;
 
 private:

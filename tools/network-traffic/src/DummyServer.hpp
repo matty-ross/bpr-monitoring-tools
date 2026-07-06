@@ -9,17 +9,17 @@
 class DummyServer
 {
 public:
-    static constexpr int k_Port = 40123;
-
-public:
     DummyServer(const Core::Logger& logger);
 
 public:
     void Load();
     void Unload();
 
-    void ClientSendData(const void* data, int dataSize) const;
-    void ServerSendData(const void* data, int dataSize) const;
+    void ClientSendData(const void* data, int size) const;
+    void ServerSendData(const void* data, int size) const;
+
+private:
+    static constexpr int k_Port = 40123;
 
 private:
     SOCKET m_ClientSocket = INVALID_SOCKET;

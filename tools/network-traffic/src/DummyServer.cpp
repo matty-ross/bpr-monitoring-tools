@@ -1,6 +1,3 @@
-#pragma comment(lib, "Ws2_32.lib")
-
-
 #include <Windows.h>
 #include <WinSock2.h>
 
@@ -41,48 +38,48 @@ void DummyServer::Load()
     SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     bind(serverSocket, reinterpret_cast<sockaddr*>(&address), sizeof(address));
     listen(serverSocket, SOMAXCONN);
-    m_Logger.Info("Created server socket.");
+    m_Logger.Info("Server is listening.");
 
     m_ClientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     connect(m_ClientSocket, reinterpret_cast<sockaddr*>(&address), sizeof(address));
-    m_Logger.Info("Created client socket.");
+    m_Logger.Info("Client connected to server.");
 
     m_ConnectedClientSocket = accept(serverSocket, nullptr, nullptr);
     closesocket(serverSocket);
-    m_Logger.Info("Connected the server and client sockets.");
+    m_Logger.Info("Server accepted the client connection.");
 }
 
 void DummyServer::Unload()
 {
     shutdown(m_ConnectedClientSocket, SD_BOTH);
     closesocket(m_ConnectedClientSocket);
-    
+
     shutdown(m_ClientSocket, SD_BOTH);
     closesocket(m_ClientSocket);
 
     WSACleanup();
 }
 
-void DummyServer::ClientSendData(const void* data, int dataSize) const
+void DummyServer::ClientSendData(const void* data, int size) const
 {
-    send(m_ClientSocket, static_cast<const char*>(data), dataSize, 0);
+    send(m_ClientSocket, static_cast<const char*>(data), size, 0);
 
-    int remainingDataSize = dataSize;
-    while (remainingDataSize > 0)
+    int remainingRecvSize = size;
+    while (remainingRecvSize > 0)
     {
         char buffer[1024] = {};
-        remainingDataSize -= recv(m_ConnectedClientSocket, buffer, sizeof(buffer), 0);
+        remainingRecvSize -= recv(m_ConnectedClientSocket, buffer, sizeof(buffer), 0);
     }
 }
 
-void DummyServer::ServerSendData(const void* data, int dataSize) const
+void DummyServer::ServerSendData(const void* data, int size) const
 {
-    send(m_ConnectedClientSocket, static_cast<const char*>(data), dataSize, 0);
+    send(m_ConnectedClientSocket, static_cast<const char*>(data), size, 0);
 
-    int remainingDataSize = dataSize;
-    while (remainingDataSize > 0)
+    int remainingRecvSize = size;
+    while (remainingRecvSize > 0)
     {
         char buffer[1024] = {};
-        remainingDataSize -= recv(m_ClientSocket, buffer, sizeof(buffer), 0);
+        remainingRecvSize -= recv(m_ClientSocket, buffer, sizeof(buffer), 0);
     }
 }
