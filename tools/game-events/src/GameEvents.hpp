@@ -22,7 +22,7 @@ private:
     static void Hook_PrintGameEvent();
 
 private:
-    void PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const;
+    void PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, int32_t gameEventSize) const;
 
 private:
     static constexpr char k_Name[] = "Game Events";

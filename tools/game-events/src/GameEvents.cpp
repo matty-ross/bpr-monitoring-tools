@@ -36,7 +36,7 @@ void GameEvents::Load()
         FILE* newStdout = nullptr;
         freopen_s(&newStdout, "CONOUT$", "w", stdout);
 
-        Core::Patch(0x00A254DD, 7, m_Logger).WriteJMP(Hook_PrintGameEvent);
+        Core::Patch(0x00A254D1, 6, m_Logger).WriteJMP(Hook_PrintGameEvent);
     }
     catch (const std::exception& ex)
     {
@@ -47,14 +47,27 @@ void GameEvents::Load()
 
 __declspec(naked) void GameEvents::Hook_PrintGameEvent()
 {
+    /*
+        void __thiscall BrnGameState::GameStateModule::ProcessGameEvents(
+            GameEventQueue* lpEventQueue,
+            GameActionQueue* lpOutputActionQueue,
+            PreWorldInputBuffer* lpInput,
+            OutputBuffer* lpOutput
+        )
+    */
+
     __asm
     {
         pushfd
         pushad
 
-        push dword ptr [esi - 0xC]
-        push dword ptr [esi - 0x10]
-        push esi
+        // esi: CgsModule::Event* lpEvent
+
+        lea eax, [esi - 0x10] // CgsModule::VariableEventQueue<5120, 16>::CBufferEntry* lpBufferEntry
+
+        push dword ptr [eax + 0x4] // int32_t lpBufferEntry->miSize
+        push dword ptr [eax + 0x0] // int32_t lpBufferEntry->miID
+        push esi // CgsModule::Event* lpEvent
         mov ecx, offset GameEvents::s_Instance
         call GameEvents::PrintGameEvent
 
@@ -62,16 +75,20 @@ __declspec(naked) void GameEvents::Hook_PrintGameEvent()
         popfd
 
         // Original code.
-        jmp dword ptr [ecx * 4 + 0x00A28E10]
+        cmp ecx, 0xEF
+
+        // Jump back.
+        push 0x00A254D7
+        ret
     }
 }
 
-void GameEvents::PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, uint32_t gameEventSize) const
+void GameEvents::PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, int32_t gameEventSize) const
 {
     if (!g_ExcludedGameEventIDs[gameEventID])
     {
         printf_s("%4d  [%4X] ", gameEventID, gameEventSize);
-        for (uint32_t i = 0; i < gameEventSize; ++i)
+        for (int32_t i = 0; i < gameEventSize; ++i)
         {
             printf_s(" %02X", gameEvent[i]);
         }
