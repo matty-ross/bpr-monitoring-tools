@@ -22,7 +22,7 @@ private:
     static void Hook_PrintGameAction();
 
 private:
-    void PrintGameAction(const std::byte* gameAction, int32_t gameActionID, uint32_t gameActionSize) const;
+    void PrintGameAction(const std::byte* gameAction, int32_t gameActionID, int32_t gameActionSize) const;
 
 private:
     static constexpr char k_Name[] = "Game Actions";
