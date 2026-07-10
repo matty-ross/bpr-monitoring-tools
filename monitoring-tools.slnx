@@ -3,12 +3,12 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Folder Name="/tools/">
-    <Project Path="tools/game-actions/game-actions.vcxproj" Id="275a0a54-108d-4349-833a-b9c389da1948" />
-    <Project Path="tools/game-events/game-events.vcxproj" Id="86c8649e-b06e-4184-93a2-13acd5985b31" />
-    <Project Path="tools/network-traffic/network-traffic.vcxproj" Id="e0ba85aa-c881-48f3-b0cb-89118db92cc0" />
+  <Folder Name="/libraries/">
+    <Project Path="libraries/core-utils/core-utils.vcxproj" Id="fdfa5ac5-a8e2-4d83-a900-5f30e4dfdb69" />
   </Folder>
-  <Folder Name="/vendor/">
-    <Project Path="vendor/core-utils/core-utils.vcxproj" Id="fdfa5ac5-a8e2-4d83-a900-5f30e4dfdb69" />
+  <Folder Name="/monitoring-tools/">
+    <Project Path="monitoring-tools/game-actions/game-actions.vcxproj" Id="275a0a54-108d-4349-833a-b9c389da1948" />
+    <Project Path="monitoring-tools/game-events/game-events.vcxproj" Id="86c8649e-b06e-4184-93a2-13acd5985b31" />
+    <Project Path="monitoring-tools/network-traffic/network-traffic.vcxproj" Id="e0ba85aa-c881-48f3-b0cb-89118db92cc0" />
   </Folder>
 </Solution>
