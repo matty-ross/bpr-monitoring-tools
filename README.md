@@ -1,4 +1,4 @@
-# Burnout Paradise Remastered monitoring tools
+# Burnout Paradise Remastered Monitoring Tools
 
 ![](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![](https://img.shields.io/badge/Visual%20Studio-5C2D91?style=for-the-badge&logo=visual-studio&logoColor=white)
@@ -7,26 +7,30 @@
 A collection of tools for monitoring various stuff in Burnout Paradise Remastered.
 
 
-## Building
+## Setup
+
+1. Clone this repository recursively (with submodules)
 1. Open the solution in Visual Studio
-2. Compile for **x86** platform
-3. Inject the dll(s) into the game
+1. Set the platform to `x86`
+1. Build the solution
+1. Inject the built DLL(s) into the game
 
 
-## Libraries
-### Common
-A library with components which are commonly used in multiple tools.
+## Monitoring tools
 
-
-## Tools
 ### Network Traffic
-A tool that creates a dummy local server and simulates the network traffic between the game and the servers without the TLS encryption.
-- Default port: 16976
-### Game Actions
-A tool that monitors the game actions and prints their contents into the console.
-- Assumes that the console has already been allocated
-- List of excluded actions can be found in `/tools/game-actions/src/GameActions.cpp`
+
+Creates a dummy local server that allows the game's network traffic to be inspected without TLS encryption.
+- Local server: `tcp://127.0.0.1:40123`
+
 ### Game Events
-A tool that monitors the game events and prints their contents into the console.
-- Assumes that the console has already been allocated
-- List of excluded events can be found in `/tools/game-events/src/GameEvents.cpp`
+
+Monitors game events from `BrnGameState::GameStateModuleIO` and prints them to the console.
+- Allocates a console
+- Exported game event ID filter: `bool g_ExcludedGameEventIDs[500]`
+
+### Game Actions
+
+Monitors game actions from `BrnGameState::GameStateModuleIO` and prints them to the console.
+- Allocates a console
+- Exported game action ID filter: `bool g_ExcludedGameActionIDs[500]`
