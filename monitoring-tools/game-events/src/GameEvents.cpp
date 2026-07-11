@@ -49,10 +49,10 @@ __declspec(naked) void GameEvents::Hook_PrintGameEvent()
 {
     /*
         void __thiscall BrnGameState::GameStateModule::ProcessGameEvents(
-            GameEventQueue* lpEventQueue,
-            GameActionQueue* lpOutputActionQueue,
-            PreWorldInputBuffer* lpInput,
-            OutputBuffer* lpOutput
+            const BrnGameState::GameStateModuleIO::GameEventQueue* lpEventQueue,
+            BrnGameState::GameStateModuleIO::BaseGameActionQueue<13312>* lpOutputActionQueue,
+            const BrnGameState::GameStateModuleIO::PreWorldInputBuffer* lpInput,
+            BrnGameState::GameStateModuleIO::OutputBuffer* lpOutput
         )
     */
 
@@ -75,7 +75,7 @@ __declspec(naked) void GameEvents::Hook_PrintGameEvent()
         popfd
 
         // Original code.
-        cmp ecx, 0xEF
+        cmp ecx, 239
 
         // Jump back.
         push 0x00A254D7

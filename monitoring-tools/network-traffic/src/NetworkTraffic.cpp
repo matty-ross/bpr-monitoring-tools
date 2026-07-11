@@ -60,9 +60,9 @@ __declspec(naked) void NetworkTraffic::Hook_ClientSendData()
         int32_t _SendPacket(
             ProtoSSLRefT* pState,
             uint8_t uType,
-            void* pHeadPtr,
+            const void* pHeadPtr,
             int32_t iHeadLen,
-            void* pBodyPtr,
+            const void* pBodyPtr,
             int32_t iBodyLen
         )
     */
@@ -72,8 +72,8 @@ __declspec(naked) void NetworkTraffic::Hook_ClientSendData()
         pushfd
         pushad
 
-        // uType == 0x17 (TLS application data)
-        cmp byte ptr [ebp + 0xC], 0x17
+        // uType == 23 (TLS application data)
+        cmp byte ptr [ebp + 0xC], 23
         jne _end
 
         push dword ptr [ebp + 0x1C] // int32_t iBodyLen
@@ -114,8 +114,8 @@ __declspec(naked) void NetworkTraffic::Hook_ServerSendData()
         mov ebx, dword ptr [esi + 0x1C] // int32_t pSecure->iRecvBase
         lea ecx, [esi + 0xBD1C] // uint8_t* pSecure->RecvData
 
-        // pSecure->RecvData[0] == 0x17 (TLS application data)
-        cmp byte ptr [ecx], 0x17
+        // pSecure->RecvData[0] == 23 (TLS application data)
+        cmp byte ptr [ecx + 0x0], 23
         jne _end
 
         // size = pSecure->iRecvSize - pSecure->iRecvBase

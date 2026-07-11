@@ -49,7 +49,7 @@ __declspec(naked) void GameActions::Hook_PrintGameAction()
 {
     /*
         void __thiscall BrnGame::BrnGameModule::CheckGameActions(
-            OutputBuffer* lpGameStateOutput
+            const BrnGameState::GameStateModuleIO::OutputBuffer* lpGameStateOutput
         )
     */
 
@@ -73,7 +73,7 @@ __declspec(naked) void GameActions::Hook_PrintGameAction()
 
         // Original code.
         sub ecx, edi
-        mov eax, 0
+        mov eax, 0x0
 
         // Jump back.
         push 0x07050A60
