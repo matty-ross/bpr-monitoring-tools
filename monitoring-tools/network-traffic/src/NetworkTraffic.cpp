@@ -57,7 +57,7 @@ void NetworkTraffic::Unload()
 __declspec(naked) void NetworkTraffic::Hook_ClientSendData()
 {
     /*
-        int32_t _SendPacket(
+        static int32_t _SendPacket(
             ProtoSSLRefT* pState,
             uint8_t uType,
             const void* pHeadPtr,
@@ -98,7 +98,7 @@ __declspec(naked) void NetworkTraffic::Hook_ClientSendData()
 __declspec(naked) void NetworkTraffic::Hook_ServerSendData()
 {
     /*
-        int32_t _RecvPacket(
+        static int32_t _RecvPacket(
             ProtoSSLRefT* pState
         )
     */
