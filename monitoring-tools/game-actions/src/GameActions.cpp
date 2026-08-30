@@ -45,6 +45,19 @@ void GameActions::Load()
     }
 }
 
+void GameActions::PrintGameAction(const std::byte* gameAction, int32_t gameActionID, int32_t gameActionSize) const
+{
+    if (!g_ExcludedGameActionIDs[gameActionID])
+    {
+        printf_s("%4d  [%4X] ", gameActionID, gameActionSize);
+        for (int32_t i = 0; i < gameActionSize; ++i)
+        {
+            printf_s(" %02X", gameAction[i]);
+        }
+        putchar('\n');
+    }
+}
+
 __declspec(naked) void GameActions::Hook_PrintGameAction()
 {
     /*
@@ -55,16 +68,16 @@ __declspec(naked) void GameActions::Hook_PrintGameAction()
 
     __asm
     {
+        // ecx: CgsModule::Event* lpAction
+        
         pushfd
         pushad
-
-        // ecx: CgsModule::Event* lpAction
 
         lea eax, [ecx - 0x10] // CgsModule::VariableEventQueue<13312, 16>::CBufferEntry* lpBufferEntry
 
         push dword ptr [eax + 0x4] // int32_t lpBufferEntry->miSize
         push dword ptr [eax + 0x0] // int32_t lpBufferEntry->miID
-        push ecx // CgsModule::Event* lpAction
+        push ecx
         mov ecx, offset GameActions::s_Instance
         call GameActions::PrintGameAction
 
@@ -78,18 +91,5 @@ __declspec(naked) void GameActions::Hook_PrintGameAction()
         // Jump back.
         push 0x07050A60
         ret
-    }
-}
-
-void GameActions::PrintGameAction(const std::byte* gameAction, int32_t gameActionID, int32_t gameActionSize) const
-{
-    if (!g_ExcludedGameActionIDs[gameActionID])
-    {
-        printf_s("%4d  [%4X] ", gameActionID, gameActionSize);
-        for (int32_t i = 0; i < gameActionSize; ++i)
-        {
-            printf_s(" %02X", gameAction[i]);
-        }
-        putchar('\n');
     }
 }

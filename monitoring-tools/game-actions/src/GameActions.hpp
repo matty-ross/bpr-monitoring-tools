@@ -19,10 +19,10 @@ public:
     void Load();
 
 private:
-    static void Hook_PrintGameAction();
+    void PrintGameAction(const std::byte* gameAction, int32_t gameActionID, int32_t gameActionSize) const;
 
 private:
-    void PrintGameAction(const std::byte* gameAction, int32_t gameActionID, int32_t gameActionSize) const;
+    static void Hook_PrintGameAction();
 
 private:
     static constexpr char k_Name[] = "Game Actions";
