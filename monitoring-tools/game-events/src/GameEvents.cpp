@@ -45,6 +45,19 @@ void GameEvents::Load()
     }
 }
 
+void GameEvents::PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, int32_t gameEventSize) const
+{
+    if (!g_ExcludedGameEventIDs[gameEventID])
+    {
+        printf_s("%4d  [%4X] ", gameEventID, gameEventSize);
+        for (int32_t i = 0; i < gameEventSize; ++i)
+        {
+            printf_s(" %02X", gameEvent[i]);
+        }
+        putchar('\n');
+    }
+}
+
 __declspec(naked) void GameEvents::Hook_PrintGameEvent()
 {
     /*
@@ -58,16 +71,16 @@ __declspec(naked) void GameEvents::Hook_PrintGameEvent()
 
     __asm
     {
+        // esi: CgsModule::Event* lpEvent
+        
         pushfd
         pushad
-
-        // esi: CgsModule::Event* lpEvent
 
         lea eax, [esi - 0x10] // CgsModule::VariableEventQueue<5120, 16>::CBufferEntry* lpBufferEntry
 
         push dword ptr [eax + 0x4] // int32_t lpBufferEntry->miSize
         push dword ptr [eax + 0x0] // int32_t lpBufferEntry->miID
-        push esi // CgsModule::Event* lpEvent
+        push esi
         mov ecx, offset GameEvents::s_Instance
         call GameEvents::PrintGameEvent
 
@@ -80,18 +93,5 @@ __declspec(naked) void GameEvents::Hook_PrintGameEvent()
         // Jump back.
         push 0x00A254D7
         ret
-    }
-}
-
-void GameEvents::PrintGameEvent(const std::byte* gameEvent, int32_t gameEventID, int32_t gameEventSize) const
-{
-    if (!g_ExcludedGameEventIDs[gameEventID])
-    {
-        printf_s("%4d  [%4X] ", gameEventID, gameEventSize);
-        for (int32_t i = 0; i < gameEventSize; ++i)
-        {
-            printf_s(" %02X", gameEvent[i]);
-        }
-        putchar('\n');
     }
 }
