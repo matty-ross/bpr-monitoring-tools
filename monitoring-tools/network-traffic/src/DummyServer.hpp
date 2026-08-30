@@ -15,8 +15,13 @@ public:
     void Load();
     void Unload();
 
+private:
     void ClientSendData(const void* data, int size) const;
     void ServerSendData(const void* data, int size) const;
+
+private:
+    static void Hook_ClientSendData();
+    static void Hook_ServerSendData();
 
 private:
     static constexpr int k_Port = 40123;

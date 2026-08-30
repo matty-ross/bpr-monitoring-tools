@@ -19,10 +19,6 @@ public:
     void Unload();
 
 private:
-    static void Hook_ClientSendData();
-    static void Hook_ServerSendData();
-
-private:
     static constexpr char k_Name[] = "Network Traffic";
 
     static NetworkTraffic s_Instance;
